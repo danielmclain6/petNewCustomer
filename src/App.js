@@ -1,23 +1,45 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useEffect, useState } from 'react';
 
-function App() {
+
+import GetAPI from './components/getAPI';
+import NewCustomerForm from './components/newCustomer'
+
+const App = () =>  {
+
+  const sendData = GetAPI();
+
+const [state, setState] = useState({
+  name: "",
+  phone: "",
+  address: ""
+})
+
+
+const handleSubmit = (event) => {
+  event.preventDefault();
+  console.log(state)
+  sendData.post(state).then(response => {
+    console.log(response);
+    alert("Customer successfully added)")
+  }).catch(error => {
+    console.log(error);
+  })
+}
+
+
+
+const handleChange = event => {
+  event.preventDefault();
+  setState({
+      ...state,
+      [event.target.name]: event.target.value
+  })
+}
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+    <NewCustomerForm state = {state} handleChange = {handleChange} handleSubmit = {handleSubmit} />
     </div>
   );
 }
